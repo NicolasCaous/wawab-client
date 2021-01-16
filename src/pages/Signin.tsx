@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import { Button, Card, Divider, Form, Input, message, Spin, Steps } from "antd";
-import { WebAuth } from "auth0-js";
 import { startPasswordless, finishPasswordless, RetStatus } from "../api/auth";
 
 const Container = styled.div`
@@ -42,165 +41,101 @@ const Signin: FC = () => {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [email, setEmail] = React.useState("");
 
-  const webAuth = new WebAuth({
-    domain: "wawab.eu.auth0.com",
-    clientID: "DtvGvLtWw4EWIKx4CO9PkMCGnV50REdQ",
-    responseType: "code",
-  });
+  const emailSubmit = async () => {
+    try {
+      await form.validateFields();
+    } catch (error) {
+      return;
+    }
 
-  const steps = [
-    {
-      title: "Código de verificação por e-mail",
-      content: (submit: any) => (
-        <>
-          <Form.Item
-            label="E-mail"
-            name="email"
-            rules={[
-              { required: true, message: "Digite um e-mail" },
-              { type: "email", message: "E-mail inválido" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <FloatRight>
-            <Button type="primary" htmlType="button" onClick={submit}>
-              Enviar Código
-            </Button>
-          </FloatRight>
-        </>
-      ),
-      submit: async () => {
-        try {
-          await form.validateFields();
-        } catch (error) {
-          return;
-        }
+    let values = form.getFieldsValue();
 
-        let values = form.getFieldsValue();
+    setLoading(true);
+    let ret = await startPasswordless(values.email);
+    setLoading(false);
 
-        setLoading(true);
-        let ret = await startPasswordless(webAuth, values.email);
-        setLoading(false);
+    switch (ret.status) {
+      case RetStatus.BAD_EMAIL:
+        form.setFields([
+          { errors: ["E-mail digitado não é válido"], name: "email" },
+        ]);
+        break;
+      case RetStatus.ERROR:
+        message.error(ret.error);
+        break;
+      case RetStatus.OK:
+        message.success("Código enviado");
+        setEmail(values.email);
+        setCurrentStep(currentStep + 1);
+        break;
+      default:
+        message.warn("No ret.status handler");
+    }
+  };
 
-        switch (ret.status) {
-          case RetStatus.BAD_EMAIL:
-            form.setFields([
-              { errors: ["E-mail digitado não é válido"], name: "email" },
-            ]);
-            break;
-          case RetStatus.ERROR:
-            message.error(ret.error);
-            break;
-          case RetStatus.OK:
-            setEmail(values.email);
-            setCurrentStep(currentStep + 1);
-            break;
-          default:
-            message.warn("No ret.status handler");
-        }
-      },
-    },
-    {
-      title: "Validação do código",
-      content: (submit: any) => (
-        <>
-          <Form.Item
-            label="Código"
-            name="code"
-            normalize={(value, prevValue, prevValues) => value.substr(0, 6)}
-            validateFirst={true}
-            rules={[
-              { required: true, message: "Digite o código" },
-              { len: 6, message: "O código é composto por 6 números" },
-              {
-                pattern: /\d{6}/,
-                message: "Apenas números são permitidos",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Button
-            type="text"
-            htmlType="button"
-            onClick={() => {
-              setEmail("");
-              setCurrentStep(currentStep - 1);
-            }}
-          >
-            Voltar
-          </Button>
-          <FloatRight>
-            <Button type="primary" htmlType="button" onClick={submit}>
-              Entrar
-            </Button>
-          </FloatRight>
-          <FloatRight>
-            <Button
-              type="default"
-              htmlType="button"
-              onClick={async () => {
-                setLoading(true);
-                let ret = await startPasswordless(webAuth, email);
-                setLoading(false);
+  const codeSubmit = async () => {
+    try {
+      await form.validateFields();
+    } catch (error) {
+      return;
+    }
 
-                switch (ret.status) {
-                  case RetStatus.BAD_EMAIL:
-                    message.error("E-mail digitado não é válido");
-                    break;
-                  case RetStatus.ERROR:
-                    console.log(ret);
-                    message.error("Erro do servidor");
-                    break;
-                  case RetStatus.OK:
-                    break;
-                  default:
-                    message.warn("No ret.status handler");
-                }
-              }}
-            >
-              Reenviar
-            </Button>
-          </FloatRight>
-        </>
-      ),
-      submit: async () => {
-        try {
-          await form.validateFields();
-        } catch (error) {
-          return;
-        }
+    let values = form.getFieldsValue();
 
-        let values = form.getFieldsValue();
+    setLoading(true);
+    let ret = await finishPasswordless(email, values.code);
+    console.log(ret);
+    setLoading(false);
 
-        setLoading(true);
-        let ret = await finishPasswordless(webAuth, email, values.code);
+    switch (ret.status) {
+      case RetStatus.ACCESS_DENIED:
+        form.setFields([
+          {
+            errors: ["Código incorreto"],
+            name: "code",
+          },
+        ]);
+        break;
+      case RetStatus.INVALID_GRANT:
+        form.setFields([
+          {
+            errors: ["Código expirado"],
+            name: "code",
+          },
+        ]);
+        break;
+      case RetStatus.ERROR:
         console.log(ret);
-        setLoading(false);
+        message.error("Erro do servidor");
+        break;
+      case RetStatus.OK:
+        history.push("/dashboard");
+        break;
+      default:
+        message.warn("No ret.status handler");
+    }
+  };
 
-        switch (ret.status) {
-          case RetStatus.ACCESS_DENIED:
-            form.setFields([
-              {
-                errors: ["Código incorreto"],
-                name: "code",
-              },
-            ]);
-            break;
-          case RetStatus.ERROR:
-            console.log(ret);
-            message.error("Erro do servidor");
-            break;
-          case RetStatus.OK:
-            message.success("Yaaay");
-            break;
-          default:
-            message.warn("No ret.status handler");
-        }
-      },
-    },
-  ];
+  const emailSubmitAgain = async () => {
+    setLoading(true);
+    let ret = await startPasswordless(email);
+    setLoading(false);
+
+    switch (ret.status) {
+      case RetStatus.BAD_EMAIL:
+        message.error("E-mail digitado não é válido");
+        break;
+      case RetStatus.ERROR:
+        console.log(ret);
+        message.error("Erro do servidor");
+        break;
+      case RetStatus.OK:
+        message.success("Código reenviado");
+        break;
+      default:
+        message.warn("No ret.status handler");
+    }
+  };
 
   return (
     <Container>
@@ -212,11 +147,88 @@ const Signin: FC = () => {
             <Divider />
             <Form form={form}>
               <Steps direction="vertical" size="small" current={currentStep}>
-                {steps.map((item) => (
-                  <Steps.Step key={item.title} title={item.title} />
-                ))}
+                <Steps.Step
+                  key="Enviar código por e-mail"
+                  title="Enviar código por e-mail"
+                />
+                <Steps.Step key="Validar código" title="Validar código" />
               </Steps>
-              {steps[currentStep].content(steps[currentStep].submit)}
+              {
+                [
+                  <>
+                    <Form.Item
+                      label="E-mail"
+                      name="email"
+                      rules={[
+                        { required: true, message: "Digite um e-mail" },
+                        { type: "email", message: "E-mail inválido" },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <FloatRight>
+                      <Button
+                        type="primary"
+                        htmlType="button"
+                        onClick={emailSubmit}
+                      >
+                        Enviar Código
+                      </Button>
+                    </FloatRight>
+                  </>,
+                  <>
+                    <Form.Item
+                      label="Código"
+                      name="code"
+                      normalize={(value, prevValue, prevValues) =>
+                        value.substr(0, 6)
+                      }
+                      validateFirst={true}
+                      rules={[
+                        { required: true, message: "Digite o código" },
+                        {
+                          len: 6,
+                          message: "O código é composto por 6 números",
+                        },
+                        {
+                          pattern: /\d{6}/,
+                          message: "Apenas números são permitidos",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Button
+                      type="text"
+                      htmlType="button"
+                      onClick={() => {
+                        setEmail("");
+                        setCurrentStep(currentStep - 1);
+                      }}
+                    >
+                      Voltar
+                    </Button>
+                    <FloatRight>
+                      <Button
+                        type="primary"
+                        htmlType="button"
+                        onClick={codeSubmit}
+                      >
+                        Entrar
+                      </Button>
+                    </FloatRight>
+                    <FloatRight>
+                      <Button
+                        type="default"
+                        htmlType="button"
+                        onClick={emailSubmitAgain}
+                      >
+                        Reenviar
+                      </Button>
+                    </FloatRight>
+                  </>,
+                ][currentStep]
+              }
             </Form>
           </Spin>
         </Card>
