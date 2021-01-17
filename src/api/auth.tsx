@@ -13,6 +13,7 @@ interface ServerResponse {
 }
 
 const AUTH0_CLIENT_ID = "DtvGvLtWw4EWIKx4CO9PkMCGnV50REdQ";
+const AUTH0_AUDIENCE = "https://api.wawab.com.br/";
 
 export const startPasswordless = async (
   email: string
@@ -65,7 +66,8 @@ export const finishPasswordless = async (
       username: email,
       otp: code,
       realm: "email",
-      scope: "openid profile email",
+      audience: AUTH0_AUDIENCE,
+      scope: "openid profile email wawab:standard",
     }),
   })
     .then((res) => res.json())
