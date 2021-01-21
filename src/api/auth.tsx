@@ -9,16 +9,23 @@ enum Status {
 interface ServerResponse {
   status: Status;
   error?: String | Object;
-  data?: Object;
+  data?: {
+    access_token: string;
+    expires_in: number;
+    id_token: string;
+    scope: string;
+    token_type: string;
+  };
 }
 
-const AUTH0_CLIENT_ID = "DtvGvLtWw4EWIKx4CO9PkMCGnV50REdQ";
 const AUTH0_AUDIENCE = "https://api.wawab.com.br/";
+const AUTH0_CLIENT_ID = "DtvGvLtWw4EWIKx4CO9PkMCGnV50REdQ";
+const AUTH0_DOMAIN = "wawab.eu.auth0.com";
 
 export const startPasswordless = async (
   email: string
 ): Promise<ServerResponse> => {
-  return await fetch("https://wawab.eu.auth0.com/passwordless/start", {
+  return await fetch(`https://${AUTH0_DOMAIN}/passwordless/start`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -55,7 +62,7 @@ export const finishPasswordless = async (
   email: string,
   code: string
 ): Promise<ServerResponse> => {
-  return await fetch("https://wawab.eu.auth0.com/oauth/token", {
+  return await fetch(`https://${AUTH0_DOMAIN}/oauth/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -67,7 +74,7 @@ export const finishPasswordless = async (
       otp: code,
       realm: "email",
       audience: AUTH0_AUDIENCE,
-      scope: "openid profile email wawab:standard",
+      scope: "openid profile email eco:standard",
     }),
   })
     .then((res) => res.json())
