@@ -4,6 +4,7 @@ import { RootState } from "./store";
 interface AuthState {
   authenticated: boolean;
   access_token?: string;
+  email?: string;
   expires_at?: number;
   id_token?: string;
   scope?: string;
@@ -12,6 +13,7 @@ interface AuthState {
 
 interface SigninAction {
   access_token: string;
+  email: string;
   expires_in: number;
   id_token: string;
   scope: string;
@@ -27,6 +29,7 @@ const initialState: AuthState = {
 };
 
 let cached_access_token = localStorage.getItem("auth_access_token");
+let cached_email = localStorage.getItem("auth_email");
 let cached_expires_at: string | number | null = localStorage.getItem(
   "auth_expires_at"
 );
@@ -39,6 +42,7 @@ if (cached_expires_at !== null) {
   if (!isExpired(cached_expires_at)) {
     initialState.authenticated = true;
     initialState.access_token = cached_access_token!;
+    initialState.email = cached_email!;
     initialState.expires_at = cached_expires_at;
     initialState.id_token = cached_id_token!;
     initialState.scope = cached_scope!;
@@ -53,12 +57,14 @@ export const authSlice = createSlice({
     signin: (state, action: PayloadAction<SigninAction>) => {
       state.authenticated = true;
       state.access_token = action.payload.access_token;
+      state.email = action.payload.email;
       state.expires_at =
         new Date().getTime() + action.payload.expires_in * 1000;
       state.id_token = action.payload.id_token;
       state.scope = action.payload.scope;
       state.token_type = action.payload.token_type;
       localStorage.setItem("auth_access_token", state.access_token);
+      localStorage.setItem("auth_email", state.email);
       localStorage.setItem("auth_expires_at", state.expires_at.toString());
       localStorage.setItem("auth_id_token", state.id_token);
       localStorage.setItem("auth_scope", state.scope);

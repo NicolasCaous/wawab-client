@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,8 +30,8 @@ const SigninHooks: () => ExposedHooks = () => {
 
   const [form] = Form.useForm();
 
-  const [currentStep, setCurrentStep] = React.useState(0);
-  const [email, setEmail] = React.useState("");
+  const [currentStep, setCurrentStep] = useState(0);
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const authenticated = useSelector(selectAuthenticated);
@@ -106,6 +106,7 @@ const SigninHooks: () => ExposedHooks = () => {
         dispatch(
           signin({
             access_token: ret.data!.access_token,
+            email: email,
             expires_in: ret.data!.expires_in,
             id_token: ret.data!.id_token,
             scope: ret.data!.scope,
