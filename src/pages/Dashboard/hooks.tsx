@@ -1,13 +1,9 @@
 import { useState } from "react";
 
-interface ExposedHooks {
-  currentPhoneActive: boolean;
-}
+interface ExposedHooks {}
 
 const DashboardHooks: () => ExposedHooks = () => {
-  const [currentPhoneActive, setCurrentPhoneActive] = useState(false);
-
-  return { currentPhoneActive };
+  return {};
 };
 
 export default DashboardHooks;

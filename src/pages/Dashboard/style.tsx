@@ -10,21 +10,8 @@ export const Content = styled.div`
   height: 100%;
 `;
 
-export const Header = styled.div`
-  height: 48px;
-  width: 100vw;
-  position: fixed;
-  z-index: 10;
-
-  background-color: ${(props) => (props.theme.active ? "#52c41a" : "#f5222d")};
-`;
-
-Header.defaultProps = {
-  theme: {
-    active: false,
-  },
-};
-
-export const HeaderFiller = styled.div`
-  height: 48px;
+export const MenuFooter = styled.div`
+  position: absolute;
+  height: 200px;
+  bottom: 0;
 `;
