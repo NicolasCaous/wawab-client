@@ -8,10 +8,19 @@ export const Container = styled.div`
 export const Content = styled.div`
   width: 100%;
   height: 100%;
+  background-color: white;
 `;
 
-export const MenuFooter = styled.div`
-  position: absolute;
-  height: 200px;
-  bottom: 0;
+export const MenuContainer = styled.div`
+  display: grid;
+  grid-template-rows: 1fr max-content;
+  height: calc(100vh - 48px);
+  border-right: 1px solid #f0f0f0;
+
+  & > div:first-child::-webkit-scrollbar {
+    width: 0px;
+    scrollbar-width: none;
+  }
 `;
+
+export const MenuStyleOverride = { width: 256, minWidth: 256 };
