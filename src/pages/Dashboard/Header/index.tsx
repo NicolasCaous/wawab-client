@@ -1,10 +1,10 @@
 import React, { FC } from "react";
-import { Animate } from "react-move";
-import { easeQuadInOut } from "d3-ease";
-import { interpolate } from "d3-interpolate";
 
-import { Button } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { Button, Spin, Typography } from "antd";
+import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
+
+// Components
+import FloatRight from "../../../components/FloatRight";
 
 // Hooks
 import HeaderHooks from "./hooks";
@@ -12,54 +12,77 @@ import HeaderHooks from "./hooks";
 // Style
 import {
   ArrowButtonContainer,
-  ExpandableContainer,
-  FloatRight,
+  Divider,
+  FloatRightContainer,
+  HeaderColors,
   HeaderContainer,
   HeaderFiller,
+  SpinContainer,
+  StatusContainer,
 } from "./style";
 
+import { connect } from "../../../redux/socketSlice";
+import { useDispatch } from "react-redux";
+
 const Header: FC = () => {
-  const { currentPhoneActive, expanded, setExpanded } = HeaderHooks();
+  const { socketStatus } = HeaderHooks();
+
+  const dispatch = useDispatch();
 
   return (
     <>
-      <Animate
-        start={{
-          expandableHeight: 0,
-          headerColor: expanded ? "#52c41a" : "#f5222d",
-          rotation: 0,
-        }}
-        update={{
-          expandableHeight: [expanded ? 100 : 0],
-          headerColor: [expanded ? "#52c41a" : "#f5222d"],
-          rotation: [expanded ? 180 : 0],
-          timing: { duration: 200, ease: easeQuadInOut },
-        }}
-        interpolation={(begValue, endValue, attr, namespace) => {
-          return interpolate(begValue, endValue);
-        }}
-      >
-        {({ expandableHeight, headerColor, rotation }) => (
-          <HeaderContainer bgcolor={headerColor}>
-            <FloatRight>
-              <ExpandableContainer
-                bgcolor={headerColor}
-                height={expandableHeight}
-              >
-                <FloatRight>
-                  <ArrowButtonContainer rotate={rotation}>
-                    <Button
-                      type="text"
-                      icon={<DownOutlined />}
-                      onClick={() => setExpanded(!expanded)}
-                    />
-                  </ArrowButtonContainer>
-                </FloatRight>
-              </ExpandableContainer>
-            </FloatRight>
-          </HeaderContainer>
-        )}
-      </Animate>
+      <HeaderContainer bgcolor={HeaderColors[socketStatus]}>
+        <FloatRight>
+          <FloatRightContainer>
+            {(() => {
+              let nodes: any = [
+                <ArrowButtonContainer>
+                  <Button
+                    type="text"
+                    icon={<DownOutlined />}
+                    onClick={() => dispatch(connect())}
+                  />
+                </ArrowButtonContainer>,
+                <StatusContainer>
+                  <Typography.Text strong>
+                    {
+                      {
+                        WAITING_TO_CONNECT: "Inicializando...",
+                        CONNECTING: (
+                          <>
+                            <SpinContainer>
+                              <LoadingOutlined style={{ fontSize: 14 }} spin />
+                            </SpinContainer>
+                            Conectando...
+                          </>
+                        ),
+                        IDLE: "Ocioso",
+                        BUSY: "Ativo",
+                        FAILED_TO_CONNECT: "Falha ao Conectar",
+                        CONCURRENT_LIMIT_REACHED: "Limite de Conexões Atingido",
+                      }[socketStatus]
+                    }
+                  </Typography.Text>
+                </StatusContainer>,
+              ];
+
+              return nodes.reduce(
+                (acc: any, x: any) =>
+                  acc === null ? (
+                    x
+                  ) : (
+                    <>
+                      {acc}
+                      <Divider />
+                      {x}
+                    </>
+                  ),
+                null
+              );
+            })()}
+          </FloatRightContainer>
+        </FloatRight>
+      </HeaderContainer>
       <HeaderFiller></HeaderFiller>
     </>
   );

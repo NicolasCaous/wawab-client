@@ -59,7 +59,35 @@ const Dashboard: FC = () => {
             </MenuContainer>
           </Layout.Sider>
           <Layout.Content>
-            <Content></Content>
+            <Content>
+              <OverflowContainer>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+                <h1>AAA</h1>
+              </OverflowContainer>
+            </Content>
           </Layout.Content>
         </Layout>
       </Container>

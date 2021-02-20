@@ -1,16 +1,16 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+
+import { selectSocketStatus, SocketStatus } from "../../../redux/socketSlice";
 
 interface ExposedHooks {
-  currentPhoneActive: boolean;
-  expanded: boolean;
-  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  socketStatus: SocketStatus;
 }
 
 const HeaderHooks: () => ExposedHooks = () => {
-  const [currentPhoneActive, setCurrentPhoneActive] = useState(true);
-  const [expanded, setExpanded] = useState(false);
+  const socketStatus = useSelector(selectSocketStatus);
 
-  return { currentPhoneActive, expanded, setExpanded };
+  return { socketStatus };
 };
 
 export default HeaderHooks;

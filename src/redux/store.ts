@@ -2,11 +2,13 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
 import authSlice from "./authSlice";
 import counterReducer from "./counterSlice";
+import socketSlice from "./socketSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     auth: authSlice,
+    counter: counterReducer,
+    socket: socketSlice,
   },
 });
 
