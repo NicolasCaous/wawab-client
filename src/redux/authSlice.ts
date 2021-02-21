@@ -82,6 +82,18 @@ export const authSlice = createSlice({
       if (state.authenticated) {
         state.authenticated = false;
         delete state.access_token;
+        delete state.email;
+        delete state.expires_at;
+        delete state.id_token;
+        delete state.scope;
+        delete state.token_type;
+
+        localStorage.removeItem("auth_access_token");
+        localStorage.removeItem("auth_email");
+        localStorage.removeItem("auth_expires_at");
+        localStorage.removeItem("auth_id_token");
+        localStorage.removeItem("auth_scope");
+        localStorage.removeItem("auth_token_type");
       }
     },
   },

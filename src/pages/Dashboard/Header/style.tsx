@@ -16,12 +16,14 @@ export const ArrowButtonContainer: any = styled.div.attrs(
 
 export const Divider = styled.div`
   margin: 12px 16px 12px 16px;
-  border-left: 2px solid rgb(255 255 255 / 80%);
+  border-left: 1px solid rgb(255 255 255 / 80%);
+  border-right: 1px solid rgb(255 255 255 / 80%);
 `;
 
 export const FloatRightContainer = styled.div`
   display: grid;
   grid-auto-flow: column;
+  margin-right: 16px;
 `;
 
 export const HeaderColors = {
@@ -47,20 +49,4 @@ export const HeaderContainer: any = styled.div.attrs(({ bgcolor }: any) => ({
 
 export const HeaderFiller = styled.div`
   height: 48px;
-`;
-
-export const SpinContainer = styled.div`
-  display: inline;
-  margin-right: 12px;
-`;
-
-export const StatusContainer = styled.div`
-  height: 48px;
-  display: flex;
-  align-items: center;
-  margin-right: 16px;
-
-  & > span {
-    color: white;
-  }
 `;

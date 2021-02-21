@@ -1,10 +1,13 @@
 import React, { FC } from "react";
 
-import { Button, Spin, Typography } from "antd";
-import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
-// Components
+// Outer Components
 import FloatRight from "../../../components/FloatRight";
+
+// Inner Components
+import SocketStatus from "./SocketStatus";
 
 // Hooks
 import HeaderHooks from "./hooks";
@@ -17,8 +20,6 @@ import {
   HeaderColors,
   HeaderContainer,
   HeaderFiller,
-  SpinContainer,
-  StatusContainer,
 } from "./style";
 
 import { connect } from "../../../redux/socketSlice";
@@ -43,27 +44,7 @@ const Header: FC = () => {
                     onClick={() => dispatch(connect())}
                   />
                 </ArrowButtonContainer>,
-                <StatusContainer>
-                  <Typography.Text strong>
-                    {
-                      {
-                        WAITING_TO_CONNECT: "Inicializando...",
-                        CONNECTING: (
-                          <>
-                            <SpinContainer>
-                              <LoadingOutlined style={{ fontSize: 14 }} spin />
-                            </SpinContainer>
-                            Conectando...
-                          </>
-                        ),
-                        IDLE: "Ocioso",
-                        BUSY: "Ativo",
-                        FAILED_TO_CONNECT: "Falha ao Conectar",
-                        CONCURRENT_LIMIT_REACHED: "Limite de Conexões Atingido",
-                      }[socketStatus]
-                    }
-                  </Typography.Text>
-                </StatusContainer>,
+                <SocketStatus />,
               ];
 
               return nodes.reduce(

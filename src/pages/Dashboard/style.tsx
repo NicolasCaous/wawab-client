@@ -22,5 +22,3 @@ export const MenuContainer = styled.div`
     scrollbar-width: none;
   }
 `;
-
-export const MenuStyleOverride = { width: 256, minWidth: 256 };
