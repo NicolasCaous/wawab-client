@@ -37,9 +37,10 @@ export const InnerContainer: any = styled.div`
   height: 100%;
   overflow: auto;
 
+  ${(props: any) => (!props.scroll ? "scrollbar-width: none;" : "")}
+
   &::-webkit-scrollbar {
     ${(props: any) => (!props.scroll ? "width: 0px;" : "")}
-    ${(props: any) => (!props.scroll ? "scrollbar-width: none;" : "")}
   }
 `;
 
