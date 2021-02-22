@@ -1,9 +1,15 @@
 import { useState } from "react";
 
-interface ExposedHooks {}
+interface ExposedHooks {
+  loading: boolean;
+}
 
 const PhoneListHooks: () => ExposedHooks = () => {
-  return {};
+  const [loading, setLoading] = useState(true);
+
+  setTimeout(() => setLoading(false), 1000);
+
+  return { loading };
 };
 
 export default PhoneListHooks;

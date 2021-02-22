@@ -32,12 +32,7 @@ const MenuFooter: FC = () => {
           <LogoImg src="svg/logo-black.svg"></LogoImg>
           <LogoText src="svg/wawab.svg"></LogoText>
         </LogoContainer>
-        <Button
-          type="primary"
-          icon={<LogoutOutlined />}
-          onClick={signout}
-          block
-        >
+        <Button icon={<LogoutOutlined />} onClick={signout} block>
           Sair
         </Button>
       </SignoutContainer>
