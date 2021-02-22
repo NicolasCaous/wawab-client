@@ -34,15 +34,15 @@ const PhoneList: FC = () => {
     <Container
       height={loading ? 80 + 48 + 16 : 80 + 48 * phones.length + 40 + 16}
     >
-      <OverflowContainer>
+      <OverflowContainer indicator>
         <Spin spinning={loading}>
           <Typography.Title level={2}>Telefones</Typography.Title>
           {loading ? (
             <PhoneSkeleton />
           ) : (
             <>
-              {phones.map((phone: any) => (
-                <Phone {...phone} />
+              {phones.map((phone: any, i) => (
+                <Phone key={i} {...phone} />
               ))}
               <AddContainer>
                 <Button

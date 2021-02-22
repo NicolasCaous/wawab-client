@@ -14,7 +14,7 @@ import { MenuStyleOverride } from "./style";
 
 const Menu: FC = () => {
   return (
-    <OverflowContainer>
+    <OverflowContainer indicator>
       <AntMenu
         style={MenuStyleOverride}
         defaultSelectedKeys={["home"]}

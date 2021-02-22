@@ -25,7 +25,7 @@ export const Container: any = styled.div.attrs(({ height }: any) => ({
     margin-bottom: 0;
   }
 
-  & > div:first-child::-webkit-scrollbar {
+  & > div:first-child > div:first-child::-webkit-scrollbar {
     width: 0px;
     scrollbar-width: none;
   }
