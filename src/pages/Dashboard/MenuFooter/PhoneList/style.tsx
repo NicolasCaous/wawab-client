@@ -24,9 +24,4 @@ export const Container: any = styled.div.attrs(({ height }: any) => ({
     padding-bottom: 24px;
     margin-bottom: 0;
   }
-
-  & > div:first-child > div:first-child::-webkit-scrollbar {
-    width: 0px;
-    scrollbar-width: none;
-  }
 `;

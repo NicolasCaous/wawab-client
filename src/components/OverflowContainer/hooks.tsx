@@ -4,13 +4,15 @@ import useMutationObserver from "@rooks/use-mutation-observer";
 
 interface ExposedHooks {
   setRef: (node: any) => void;
-  showIndicator: boolean;
+  showBottomIndicator: boolean;
+  showTopIndicator: boolean;
 }
 
 const OverflowContainerHooks: (indicator: boolean) => ExposedHooks = (
   indicator: boolean
 ) => {
-  const [showIndicator, setShowIndicator] = useState(false);
+  const [showBottomIndicator, setShowBottomIndicator] = useState(false);
+  const [showTopIndicator, setShowTopIndicator] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   const onChange = useCallback(() => {
@@ -18,15 +20,16 @@ const OverflowContainerHooks: (indicator: boolean) => ExposedHooks = (
 
     const callback = () => {
       if (ref.current) {
-        setShowIndicator(
+        setShowTopIndicator(ref.current.scrollTop > 0);
+        setShowBottomIndicator(
           ref.current.getBoundingClientRect().height + ref.current.scrollTop <
-            ref.current.scrollHeight
+            ref.current.scrollHeight - 1
         );
       }
     };
     callback();
     for (let i = 1; i <= 5; ++i) setTimeout(callback, 200 * i);
-  }, [ref, indicator, setShowIndicator]);
+  }, [ref, indicator, setShowBottomIndicator]);
 
   useMutationObserver(ref, onChange);
 
@@ -44,7 +47,7 @@ const OverflowContainerHooks: (indicator: boolean) => ExposedHooks = (
     ref.current = node;
   }, []);
 
-  return { setRef, showIndicator };
+  return { setRef, showBottomIndicator, showTopIndicator };
 };
 
 export default OverflowContainerHooks;

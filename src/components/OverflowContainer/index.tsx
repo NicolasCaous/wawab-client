@@ -1,7 +1,12 @@
 import React, { FC, ReactNode } from "react";
 
 // Style
-import { Container, IndicatorContainer, InnerContainer } from "./style";
+import {
+  BottomIndicatorContainer,
+  Container,
+  InnerContainer,
+  TopIndicatorContainer,
+} from "./style";
 
 // Hooks
 import OverflowContainerHooks from "./hooks";
@@ -9,18 +14,27 @@ import OverflowContainerHooks from "./hooks";
 interface Props {
   children?: ReactNode;
   indicator?: boolean;
+  scroll?: boolean;
 }
 
 const OverflowContainer: FC<Props> = ({
   children,
   indicator = false,
+  scroll = true,
 }: Props) => {
-  const { setRef, showIndicator } = OverflowContainerHooks(indicator);
+  const {
+    setRef,
+    showBottomIndicator,
+    showTopIndicator,
+  } = OverflowContainerHooks(indicator);
 
   return (
     <Container>
-      <InnerContainer ref={setRef}>{children}</InnerContainer>
-      <IndicatorContainer opacity={showIndicator ? 0.8 : 0} />
+      <TopIndicatorContainer opacity={showTopIndicator ? 0.8 : 0} />
+      <InnerContainer ref={setRef} scroll={scroll}>
+        {children}
+      </InnerContainer>
+      <BottomIndicatorContainer opacity={showBottomIndicator ? 0.8 : 0} />
     </Container>
   );
 };

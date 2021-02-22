@@ -16,9 +16,4 @@ export const MenuContainer = styled.div`
   grid-template-rows: 1fr max-content;
   height: calc(100vh - 48px);
   border-right: 1px solid #f0f0f0;
-
-  & > div:first-child > div:first-child::-webkit-scrollbar {
-    width: 0px;
-    scrollbar-width: none;
-  }
 `;

@@ -8,7 +8,7 @@ enum Status {
 
 interface ServerResponse {
   status: Status;
-  error?: String | Object;
+  error?: any;
   data?: {
     access_token: string;
     expires_in: number;

@@ -34,7 +34,7 @@ const PhoneList: FC = () => {
     <Container
       height={loading ? 80 + 48 + 16 : 80 + 48 * phones.length + 40 + 16}
     >
-      <OverflowContainer indicator>
+      <OverflowContainer indicator scroll={false}>
         <Spin spinning={loading}>
           <Typography.Title level={2}>Telefones</Typography.Title>
           {loading ? (

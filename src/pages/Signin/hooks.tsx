@@ -56,7 +56,7 @@ const SigninHooks: () => ExposedHooks = () => {
         ]);
         break;
       case RetStatus.ERROR:
-        message.error(ret.error);
+        message.error(ret.error.toString());
         break;
       case RetStatus.OK:
         message.success("Código enviado");
